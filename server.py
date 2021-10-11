@@ -2,6 +2,21 @@ import json
 from flask import Flask, render_template, request, redirect, flash, url_for
 import sys
 
+
+def is_a_positive_integer(string_to_check: str) -> bool:
+    """ check that the string_to_check is a positive integer and not another alphanumeric value
+        param: input type = string
+        param: output type = boolean
+    """
+    filter = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+    check = ""
+    for character in number_of_places:
+        if character not in filter:
+            check = character
+            break
+    return check == ""
+
+
 def loadClubs():
     with open('clubs.json') as c:
          listOfClubs = json.load(c)['clubs']
@@ -52,12 +67,8 @@ def purchasePlaces():
     club = [c for c in clubs if c['name'] == request.form['club']][0]
     placesRequired = int(request.form['places'])
     competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
-    flash('Great-booking complete!')
-    ###################
-    # Issue update club points solved here
     club['points'] = str(int(club['points']) - placesRequired)
-    # saveClubUpdate(club)
-    ####################
+    flash('Great-booking complete!')
     return render_template('welcome.html', club=club, competitions=competitions)
 
 

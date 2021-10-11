@@ -25,3 +25,18 @@ def load_competitions():
     with open('competitions.json') as comps:
          competitions = json.load(comps)['competitions']
          return competitions
+
+
+@pytest.fixture
+def is_a_positive_integer(string_to_check: str):
+    """ check that the string_to_check is a positive integer and not another alphanumeric value
+        param: input type = string
+        param: ouput type = boolean
+    """
+    filter = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+    check = ""
+    for character in number_of_places:
+        if character not in filter:
+            check = character
+            break
+    return check == ""
