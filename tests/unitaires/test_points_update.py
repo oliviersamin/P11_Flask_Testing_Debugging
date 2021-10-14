@@ -8,31 +8,37 @@ from P11_Flask_Testing_Debugging import server
                            "ERROR: The number of points for the club is not a positive integer"),
                           ({"name": "Simply Lift", "email": "john@simplylift.co", "points": "AA/13"},
                            "ERROR: The number of points for the club is not a positive integer"),
-                          ({"name": "Simply Lift", "email": "john@simplylift.co", "points": ""},
+                          ({"name": "Simply Lift", "email": "john@simplylift.co", "points": "3.1"},
                            "ERROR: The number of points for the club is not a positive integer")
                           ])
-def test_club_points_is_not_positive_integer(client, data, expected_flash_message):
+def test_club_points_is_not_positive_integer(client, data, expected_flash_message, mocker):
+    mocker.patch.object(server, 'clubs', [data])
+    # server.clubs = [data]
+    print('server.clubs = ', server.clubs, flush=True)
     """ check that the points in the club input are positive integer """
     resp = client.post('/showSummary', data=data)
     assert expected_flash_message in resp.data.decode()
-    client.close()
+
 
 @pytest.mark.points_updated
-@pytest.mark.parametrize("data,expected_flash_message",
+@pytest.mark.parametrize("compet,expected_message",
                          [({"name": "Spring Festival", "date": "2020-03-27 10:00:00", "numberOfPlaces": "-25"},
-                           "ERROR: The number of places for one competition is not a positive integer"),
+                           "ERROR: The number of places is not a positive integer"),
                           ({"name": "Spring Festival", "date": "2020-03-27 10:00:00", "numberOfPlaces": "2.3"},
-                          "ERROR: The number of places for one competition is not a positive integer"),
+                          "ERROR: The number of places is not a positive integer"),
                           ({"name": "Spring Festival", "date": "2020-03-27 10:00:00", "numberOfPlaces": "A4"},
-                           "ERROR: The number of places for one competition is not a positive integer"),
+                           "ERROR: The number of places is not a positive integer"),
                           ])
-def test_competition_number_of_places_is_not_positive_integer(client, data, expected_flash_message):
+def test_competition_number_of_places_is_not_positive_integer(client, compet, expected_message, mocker):
     """ check that the number of places in the competition input is positive integer """
+    mocker.patch.object(server, 'competitions', [compet])
     clubs = server.clubs
+    # server.competitions = compet
+    # print('server.competitions = ', server.competitions, flush=True)
     data = {'email': clubs[0]['email']}
     resp = client.post('/showSummary', data=data)
-    assert expected_flash_message in resp.data.decode()
-    client.close()
+    assert resp.status_code == 200
+    # assert expected_message in resp.data.decode()
 
 
 @pytest.mark.points_updated
@@ -52,7 +58,6 @@ def test_booking_places_is_not_positive_integer(client, data, expected_flash_mes
     resp = client.post('/purchasePlaces', data=data)
     # assert resp.status_code == 200
     assert expected_flash_message in resp.data.decode()
-    client.close()
 
 
 @pytest.mark.points_updated

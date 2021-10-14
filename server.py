@@ -10,11 +10,22 @@ def is_a_positive_integer(string_to_check: str) -> bool:
     """
     filter = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
     check = ""
-    for character in number_of_places:
+    for character in string_to_check:
         if character not in filter:
             check = character
             break
     return check == ""
+
+
+def check_competitions_number_of_places_is_positive_integer():
+    filter = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+    print("CHECK COMPETITIONS_NUMBER...., competitons = ", competitions, flush=True)
+    for index, compet in enumerate(competitions):
+        print('compet = ', compet, flush=True)
+        for char in compet['numberOfPlaces']:
+            if char not in filter:
+                competitions[index]['numberOfPlaces'] = "ERROR: The number of places is not a positive integer"
+                break
 
 
 def loadClubs():
@@ -35,6 +46,7 @@ app.secret_key = 'something_special'
 competitions = loadCompetitions()
 clubs = loadClubs()
 
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -45,7 +57,13 @@ def showSummary():
         club = [club for club in clubs if club['email'] == request.form['email']]
         if club:
             club = club[0]
-            return render_template('welcome.html', club=club, competitions=competitions)
+            if is_a_positive_integer(club['points']):
+                check_competitions_number_of_places_is_positive_integer()
+                return render_template('welcome.html', club=club, competitions=competitions)
+            else:
+                flash('ERROR: The number of points for the club is not a positive integer')
+                error = True
+                return render_template('welcome.html', club=club, error_club_points=error)
         else:
             return render_template('welcome.html')
 
@@ -65,12 +83,15 @@ def book(competition, club):
 def purchasePlaces():
     competition = [c for c in competitions if c['name'] == request.form['competition']][0]
     club = [c for c in clubs if c['name'] == request.form['club']][0]
-    placesRequired = int(request.form['places'])
-    competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
-    club['points'] = str(int(club['points']) - placesRequired)
-    flash('Great-booking complete!')
-    return render_template('welcome.html', club=club, competitions=competitions)
-
+    if is_a_positive_integer(request.form['places']):
+        placesRequired = int(request.form['places'])
+        competition['numberOfPlaces'] = str(int(competition['numberOfPlaces'])-placesRequired)
+        club['points'] = str(int(club['points']) - placesRequired)
+        flash('Great-booking complete!')
+        return render_template('welcome.html', club=club, competitions=competitions)
+    else:
+        flash('ERROR: The number of places booked is not a positive integer')
+        return render_template('welcome.html', club=club, competitions=competitions)
 
 # TODO: Add route for points display
 
