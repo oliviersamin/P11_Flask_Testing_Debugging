@@ -37,8 +37,8 @@ def test_competition_number_of_places_is_not_positive_integer(client, compet, ex
     # print('server.competitions = ', server.competitions, flush=True)
     data = {'email': clubs[0]['email']}
     resp = client.post('/showSummary', data=data)
-    assert resp.status_code == 200
-    # assert expected_message in resp.data.decode()
+    # assert resp.status_code == 200
+    assert expected_message in resp.data.decode()
 
 
 @pytest.mark.points_updated
@@ -61,18 +61,20 @@ def test_booking_places_is_not_positive_integer(client, data, expected_flash_mes
 
 
 @pytest.mark.points_updated
-def test_club_points_updated(client):
+def test_club_points_updated(client, load_clubs):
     """ check that with positive integers numbers, the balance od point of the club is updated
     after a reservation"""
-    clubs = server.clubs
+    clubs = load_clubs
     competitions = server.competitions
     club = {}
     compet = {}
+    # selection of a club with a positive integer as number of points
     for c in clubs:
         if int(c['points']) & int(c['points']) > 0:
             club = c
             break
 
+    # selection of a competition with a positive integer as number of places
     for c in competitions:
         if int(c['numberOfPlaces']) & int(c['numberOfPlaces']) >0:
             compet = c
@@ -81,10 +83,12 @@ def test_club_points_updated(client):
     data = {'competition': compet['name'],
             'club': club['name'],
             'places': '1'}
+    print('club points avant = ', club['points'], flush=True)
     club['points'] = str(int(club['points']) - int(data['places']))
     resp = client.post('/purchasePlaces', data=data)
     welcome_message = "Welcome, " + club['email']
     points_updated = "Points available: " + club['points']
+    print('points updated = ', points_updated, flush=True)
     assert resp.status_code == 200
     assert welcome_message in resp.data.decode()
     assert "Great-booking complete!" in resp.data.decode()
