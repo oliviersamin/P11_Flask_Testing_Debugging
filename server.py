@@ -1,6 +1,18 @@
 import json
 from flask import Flask, render_template, request, redirect, flash, url_for
 import sys
+import time as t
+
+
+def is_competition_in_the_future(competition):
+    date_format = "%Y-%m-%d %H:%M:%S"
+    result = t.strptime(competition['date'], date_format)
+    result = t.mktime(result)
+    difference = result - t.time()
+    if difference > 0:
+        return True
+    return False
+
 
 
 def is_a_positive_integer(string_to_check: str) -> bool:
@@ -70,8 +82,13 @@ def showSummary():
 def book(competition, club):
     foundClub = [c for c in clubs if c['name'] == club][0]
     foundCompetition = [c for c in competitions if c['name'] == competition][0]
-    if foundClub and foundCompetition:
+
+    if foundClub and foundCompetition and is_competition_in_the_future(foundCompetition):
         return render_template('booking.html', club=foundClub, competition=foundCompetition)
+    elif foundClub and foundCompetition and (not is_competition_in_the_future(foundCompetition)):
+        flash("ERROR: This competition is over")
+        return render_template('welcome.html', club=club, competitions=competitions)
+
     else:
         flash("Something went wrong-please try again")
         return render_template('welcome.html', club=club, competitions=competitions)
