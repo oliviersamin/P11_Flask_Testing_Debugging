@@ -87,8 +87,7 @@ def book(competition, club):
         return render_template('booking.html', club=foundClub, competition=foundCompetition)
     elif foundClub and foundCompetition and (not is_competition_in_the_future(foundCompetition)):
         flash("ERROR: This competition is over")
-        return render_template('welcome.html', club=club, competitions=competitions)
-
+        return render_template('welcome.html', club=foundClub, competitions=competitions)
     else:
         flash("Something went wrong-please try again")
         return render_template('welcome.html', club=club, competitions=competitions)
