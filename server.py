@@ -19,9 +19,7 @@ def is_a_positive_integer(string_to_check: str) -> bool:
 
 def check_competitions_number_of_places_is_positive_integer():
     filter = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
-    print("CHECK COMPETITIONS_NUMBER...., competitons = ", competitions, flush=True)
     for index, compet in enumerate(competitions):
-        print('compet = ', compet, flush=True)
         for char in compet['numberOfPlaces']:
             if char not in filter:
                 competitions[index]['numberOfPlaces'] = "ERROR: The number of places is not a positive integer"

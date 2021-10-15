@@ -1,7 +1,6 @@
 from locust import HttpUser, task
 import pytest
 
-@pytest.mark.login_error
 class TestPerformance(HttpUser):
 
     @task(6)
