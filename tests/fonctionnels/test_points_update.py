@@ -3,8 +3,10 @@ import pytest
 import time
 
 
+
 @pytest.mark.points_updated
 class TestWithSelenium:
+
     def __get_points_from_string(self, string):
         string = string[::-1]
         string = string[:string.find(':')]
