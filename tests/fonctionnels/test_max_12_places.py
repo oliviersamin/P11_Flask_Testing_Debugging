@@ -3,7 +3,7 @@ import pytest
 import time
 
 
-@pytest.mark.max_12_places
+# @pytest.mark.max_12_places
 class TestWithSelenium:
 
     def __open_site_with_Chrome(self):
@@ -52,15 +52,15 @@ class TestWithSelenium:
         assert booking_message in body.text
         self.browser.close()
 
+    def test_sad_path(self):
+        self.__login()
+        self.__select_future_competition()
+        self.__sad_booking_places()
 
     def test_happy_path(self):
         self.__login()
         self.__select_future_competition()
         self.__happy_booking_places()
 
-    def test_sad_path(self):
-        self.__login()
-        self.__select_future_competition()
-        self.__sad_booking_places()
 
 

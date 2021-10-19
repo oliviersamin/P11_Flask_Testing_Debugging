@@ -32,7 +32,7 @@ class TestWithSelenium:
         self.initial_points = self.__get_points_from_string(self.initial_points)
         links = self.browser.find_elements_by_tag_name("a")
         for l in links:
-            if l.text == "Book Places":
+            if (l.text == "Book Places") & ("Fall" in l.get_attribute("href")):
                 time.sleep(2)
                 l.click()
                 break

@@ -7,17 +7,16 @@ import time
 @pytest.mark.no_more_than_club_points
 class TestWithSelenium:
 
+
     def __open_site_with_Chrome(self):
         self.browser = Chrome("chromedriver")
         self.browser.get("http://127.0.0.1:5000/")
 
-    def __login(self, mocker):
-        mocker.patch.object(server, 'clubs', [{"name": "Simply Lift",
-                                               "email": "john@simplylift.co", "points": "3"}])
+    def __login(self):
         self.__open_site_with_Chrome()
         # enter valid data to get to the welcome page
         email = self.browser.find_element_by_name("email")
-        secretary_email = "john@simplylift.co"
+        secretary_email = "admin@irontemple.com"
         email.send_keys(secretary_email)
         validate = self.browser.find_element_by_tag_name("button")
         time.sleep(2)
@@ -50,19 +49,19 @@ class TestWithSelenium:
         validate = self.browser.find_element_by_tag_name("button")
         validate.click()
         time.sleep(2)
-        booking_message = "ERROR: You cannot book more places than your total club's points"
+        booking_message = "ERROR: You cannot book more places than your total club points"
         body = self.browser.find_element_by_tag_name("body")
         assert booking_message in body.text
         self.browser.close()
 
 
-    def test_happy_path(self, mocker):
-        self.__login(mocker)
+    def test_happy_path(self):
+        self.__login()
         self.__select_future_competition()
         self.__happy_booking_places()
 
-    def test_sad_path(self, mocker):
-        self.__login(mocker)
+    def test_sad_path(self):
+        self.__login()
         self.__select_future_competition()
         self.__sad_booking_places()
 

@@ -97,15 +97,22 @@ def book(competition, club):
 def purchasePlaces():
     competition = [c for c in competitions if c['name'] == request.form['competition']][0]
     club = [c for c in clubs if c['name'] == request.form['club']][0]
-    if is_a_positive_integer(request.form['places']) & (int(request.form['places']) < 13):
-        placesRequired = int(request.form['places'])
-        competition['numberOfPlaces'] = str(int(competition['numberOfPlaces'])-placesRequired)
-        club['points'] = str(int(club['points']) - placesRequired)
-        flash('Great-booking complete!')
-        return render_template('welcome.html', club=club, competitions=competitions)
-    elif is_a_positive_integer(request.form['places']) & (int(request.form['places']) >= 13):
+    if is_a_positive_integer(request.form['places']):
+        if int(request.form['places']) > int(club['points']):
+            flash("ERROR: You cannot book more places than your total club points")
+            return render_template('welcome.html', club=club, competitions=competitions)
+        elif (int(request.form['places']) < 13) & (int(request.form['places']) <= int(club['points'])):
+            placesRequired = int(request.form['places'])
+            print('required = ', placesRequired, flush=True)
+            competition['numberOfPlaces'] = str(int(competition['numberOfPlaces'])-placesRequired)
+            club['points'] = str(int(club['points']) - placesRequired)
+            print('new club points = ', club['points'], flush=True)
+            flash('Great-booking complete!')
+            return render_template('welcome.html', club=club, competitions=competitions)
+        elif int(request.form['places']) >= 13:
             flash('ERROR: The maximum places to be reserved by club is 12')
             return render_template('welcome.html', club=club, competitions=competitions)
+
     else:
         flash('ERROR: The number of places booked is not a positive integer')
         return render_template('welcome.html', club=club, competitions=competitions)
