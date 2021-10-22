@@ -64,6 +64,9 @@ def index():
 
 @app.route('/showSummary', methods=['POST'])
 def showSummary():
+        global clubs, competitions
+        clubs = loadClubs()
+        competitions = loadCompetitions()
         club = [club for club in clubs if club['email'] == request.form['email']]
         if club:
             club = club[0]
