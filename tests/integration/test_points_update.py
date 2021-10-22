@@ -11,7 +11,7 @@ class Test_points_updated:
                           "numberOfPlaces": "200"}
 
     def load_clubs(self):
-        """ load the data from 'clubs.json' and override the clubs varable from server.py """
+        """ load the data from 'clubs.json' and override the clubs variable from server.py """
         with open('clubs.json') as c:
             clubs = json.load(c)['clubs']
             return clubs
@@ -19,19 +19,31 @@ class Test_points_updated:
     def load_competitions(self):
         """ load the data from 'clubs.json' and override the competitions varable from server.py """
         with open('competitions.json') as comps:
-            competitions = json.load(comps)['competitions']
+            competitions = json.load(comps)
             return competitions
 
+    def __setup_competitions_json_file(self):
+        """ insert needed data for the tests and save the json """
+        compets = self.load_competitions()
+        compets['competitions'].append(self.future_competition)
+        # compets = json.dumps(compets)
+        with open('competitions.json', 'w') as comps:
+            json.dump(compets, comps)
+
+    def __teardown_competitions_json_file(self):
+        compets = self.load_competitions()
+        compets['competitions'] = compets['competitions'][:-1]
+        with open('competitions.json', 'w') as comps:
+            json.dump(compets, comps)
+
+
     def setup_method(self, method):
-        server.clubs = self.load_clubs()
+        self.__setup_competitions_json_file()
         server.competitions = self.load_competitions()
-        server.competitions.append(self.future_competition)
-        print("\n ######### DANS SETUP #######\n competitions = ", server.competitions)
 
     def teardown_method(self, method):
-        server.clubs = self.load_clubs()
+        self.__teardown_competitions_json_file()
         server.competitions = self.load_competitions()
-        print("\n#### DANS TEARDOWN #######\n competitions = ", server.competitions)
 
 
     def test_points_updated(self, client):
@@ -39,10 +51,8 @@ class Test_points_updated:
         and the sad path (the number of places is not a positive integer) for the booking process """
 
         # préparation des données utilisées pour le test
-        clubs = server.clubs
-        competitions = server.competitions
-        competition = competitions[-1]
-        club = clubs[-1]
+        competition = server.competitions['competitions'][-1]
+        club = server.clubs[-1]
         # connexion to site through the login page
         resp = client.post('/showSummary', data={'email': club['email']})
         expected_value = 'Welcome, ' + club['email']
@@ -50,9 +60,7 @@ class Test_points_updated:
             # go to the booking page for one competition
             resp = client.get('/book/{}/{}'.format(competition['name'], club['name']))
             if 'How many places?' in resp.data.decode():  # if booking page reached
-                print('page de réservation atteinte...')
                 # HAPPY PATH: book places with a valid positive integer as number of places
-                print('booking with correct data....', flush=True)
                 data = {'competition': competition['name'], 'club': club['name'], 'places': self.valid_number_of_places}
                 club['points'] = str(int(club['points']) - int(data['places']))
                 resp = client.post('/purchasePlaces', data=data)
@@ -61,15 +69,12 @@ class Test_points_updated:
                 assert welcome_message in resp.data.decode()
                 assert "Great-booking complete!" in resp.data.decode()
                 assert points_updated in resp.data.decode()
-                print('booking with correct data.... OK!', flush=True)
                 # SAD PATH: book places with a non positive integer as number of places
-                print('booking with wrong data....', flush=True)
                 data = {'competition': competition['name'], 'club': club['name'], 'places': self.wrong_number_of_places}
                 resp = client.post('/purchasePlaces', data=data)
                 error_message = 'ERROR: The number of places booked is not a positive integer'
                 assert error_message in resp.data.decode()
                 assert points_updated in resp.data.decode()
-                print('booking with wrong data....OK!', flush=True)
         else:  # if login error by wrong credentials
             error_message = 'This is not a valid email, please try again'
             assert error_message in resp.data.decode()

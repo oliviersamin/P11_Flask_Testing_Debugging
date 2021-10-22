@@ -1,6 +1,17 @@
 import json
 from flask import Flask, render_template, request, redirect, flash, url_for
 import sys
+import time as t
+
+
+def is_competition_in_the_future(competition):
+    date_format = "%Y-%m-%d %H:%M:%S"
+    result = t.strptime(competition['date'], date_format)
+    result = t.mktime(result)
+    difference = result - t.time()
+    if difference > 0:
+        return True
+    return False
 
 
 def is_a_positive_integer(string_to_check: str) -> bool:
@@ -52,6 +63,9 @@ def index():
 
 @app.route('/showSummary', methods=['POST'])
 def showSummary():
+        global clubs, competitions
+        clubs = loadClubs()
+        competitions = loadCompetitions()
         club = [club for club in clubs if club['email'] == request.form['email']]
         if club:
             club = club[0]
@@ -81,12 +95,15 @@ def book(competition, club):
 def purchasePlaces():
     competition = [c for c in competitions if c['name'] == request.form['competition']][0]
     club = [c for c in clubs if c['name'] == request.form['club']][0]
-    if is_a_positive_integer(request.form['places']):
+    if is_a_positive_integer(request.form['places']) & (int(request.form['places']) < 13):
         placesRequired = int(request.form['places'])
         competition['numberOfPlaces'] = str(int(competition['numberOfPlaces'])-placesRequired)
         club['points'] = str(int(club['points']) - placesRequired)
         flash('Great-booking complete!')
         return render_template('welcome.html', club=club, competitions=competitions)
+    elif is_a_positive_integer(request.form['places']) & (int(request.form['places']) >= 13):
+            flash('ERROR: The maximum places to be reserved by club is 12')
+            return render_template('welcome.html', club=club, competitions=competitions)
     else:
         flash('ERROR: The number of places booked is not a positive integer')
         return render_template('welcome.html', club=club, competitions=competitions)
