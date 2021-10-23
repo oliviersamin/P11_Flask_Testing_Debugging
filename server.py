@@ -14,7 +14,6 @@ def is_competition_in_the_future(competition):
     return False
 
 
-
 def is_a_positive_integer(string_to_check: str) -> bool:
     """ check that the string_to_check is a positive integer and not another alphanumeric value
         param: input type = string
