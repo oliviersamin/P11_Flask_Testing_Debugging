@@ -1,21 +1,27 @@
 from selenium.webdriver import Chrome
+from P11_Flask_Testing_Debugging import server
 import pytest
 import time
 import json
 
 
-@pytest.mark.points_updated
+@pytest.mark.no_more_than_club_points
 class TestWithSelenium:
 
     futur_competition = {"name": "Futur_competition", "date": "2022-03-27 10:00:00", "numberOfPlaces": "200"}
-
-    "Points available: "
+    club = [{"name": "Test_club", "email": "test_club@test.com", "points": "8"}]
 
     def __get_points_from_string(self, string_to_use):
         string_to_use = string_to_use[::-1]
         string_to_use = string_to_use[:string_to_use.find(':')]
         string_to_use = string_to_use[::-1]
         return(int(string_to_use))
+
+    def load_clubs(self):
+        """ load the data from 'clubs.json' and override the clubs varable from server.py """
+        with open('clubs.json') as c:
+            clubs = json.load(c)['clubs']
+            return clubs
 
     def load_competitions(self):
         """ load the data from 'clubs.json' and override the competitions varable from server.py """
@@ -30,6 +36,15 @@ class TestWithSelenium:
         with open('competitions.json', 'w') as comps:
                 json.dump(compets, comps)
 
+    def __setup_club(self):
+        clubs = self.load_clubs()
+        for c in self.club:
+            clubs.append(c)
+        clubs = {'clubs': clubs}
+        with open('clubs.json', 'w') as comps:
+                json.dump(clubs, comps)
+        clubs = self.load_clubs()
+
     def __tear_down_competitions(self):
         compet = self.load_competitions()
         compet = compet[:2]
@@ -37,13 +52,22 @@ class TestWithSelenium:
         with open('competitions.json', 'w') as comps:
             json.dump(compet, comps)
 
+    def __tear_down_club(self):
+        clubs = self.load_clubs()
+        clubs = clubs[:3]
+        clubs = {'clubs': clubs}
+        with open('clubs.json', 'w') as comps:
+            json.dump(clubs, comps)
+
     def setup_method(self, method):
         self.__setup_competition()
+        self.__setup_club()
 
     def teardown_method(self, method):
         self.__tear_down_competitions()
+        self.__tear_down_club()
 
-    def __open_site_with_chrome(self):
+    def __open_site_with_Chrome(self):
         self.browser = Chrome("chromedriver")
         self.browser.get("http://127.0.0.1:5000/")
 
@@ -51,52 +75,53 @@ class TestWithSelenium:
         self.__open_site_with_Chrome()
         # enter valid data to get to the welcome page
         email = self.browser.find_element_by_name("email")
-        secretary_email = "john@simplylift.co"
+        secretary_email = "test_club@test.com"
         email.send_keys(secretary_email)
         validate = self.browser.find_element_by_tag_name("button")
         time.sleep(2)
         validate.click()
 
-    def __select_the_futur_competition(self):
-        self.initial_points = self.browser.find_element_by_tag_name("div").text
-        self.initial_points = self.__get_points_from_string(self.initial_points)
+    def __select_future_competition(self):
         links = self.browser.find_elements_by_tag_name("a")
-        compets = []
         for l in links:
-            if l.text == "Book Places":
-                compets.append(l)
-        time.sleep(2)
-        compets[-1].click()
+            if (l.text == "Book Places") & ("Futur_competition" in l.get_attribute("href")):
+                time.sleep(2)
+                l.click()
+                break
 
-    def __choose_number_of_places_to_book(self, number_of_places, error):
+    def __happy_booking_places(self):
         places = self.browser.find_element_by_name("places")
-        places.send_keys(number_of_places)
+        places.send_keys("1")
         time.sleep(2)
         validate = self.browser.find_element_by_tag_name("button")
         validate.click()
-        time.sleep(3)
-        if not error:  # HAPPY PATH
-            booking_message = "Great-booking complete!"
-            self.final_points = self.browser.find_element_by_tag_name("div").text
-            print("\n######## DANS CHOOSE ###########\n", self.final_points, flush=True)
-            self.final_points = self.__get_points_from_string(self.final_points)
-            print("self.final_points = ", self.final_points)
-            body = self.browser.find_element_by_tag_name("body")
-            assert booking_message in body.text
-            assert self.final_points == (self.initial_points - int(number_of_places))
-        else:  # SAD PATH
-            error_message = 'ERROR: The number of places booked is not a positive integer'
-            body = self.browser.find_element_by_tag_name("body")
-            assert error_message in body.text
-
+        time.sleep(2)
+        booking_message = "Great-booking complete!"
+        body = self.browser.find_element_by_tag_name("body")
+        assert booking_message in body.text
         self.browser.close()
+
+    def __sad_booking_places(self):
+        places = self.browser.find_element_by_name("places")
+        places.send_keys("10")
+        time.sleep(2)
+        validate = self.browser.find_element_by_tag_name("button")
+        validate.click()
+        time.sleep(2)
+        booking_message = "ERROR: You cannot book more places than your total club points"
+        body = self.browser.find_element_by_tag_name("body")
+        assert booking_message in body.text
+        self.browser.close()
+
 
     def test_happy_path(self):
         self.__login()
-        self.__select_the_futur_competition()
-        self.__choose_number_of_places_to_book("1", error=False)
+        self.__select_future_competition()
+        self.__happy_booking_places()
 
     def test_sad_path(self):
         self.__login()
-        self.__select_the_futur_competition()
-        self.__choose_number_of_places_to_book("-2", error=True)
+        self.__select_future_competition()
+        self.__sad_booking_places()
+
+

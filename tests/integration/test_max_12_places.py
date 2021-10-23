@@ -3,6 +3,7 @@ from P11_Flask_Testing_Debugging import server
 import time as t
 import json
 
+
 @pytest.mark.max_12_places
 class Test_max_12_places:
 

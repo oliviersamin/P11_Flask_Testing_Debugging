@@ -4,7 +4,7 @@ import time
 import json
 
 
-@pytest.mark.max_12_places
+# @pytest.mark.max_12_places
 class TestWithSelenium:
 
     futur_competition = {"name": "Futur_competition", "date": "2022-03-27 10:00:00", "numberOfPlaces": "200"}
@@ -114,15 +114,15 @@ class TestWithSelenium:
         assert booking_message in body.text
         self.browser.close()
 
+    def test_sad_path(self):
+        self.__login()
+        self.__select_future_competition()
+        self.__sad_booking_places()
 
     def test_happy_path(self):
         self.__login()
         self.__select_future_competition()
         self.__happy_booking_places()
 
-    def test_sad_path(self):
-        self.__login()
-        self.__select_future_competition()
-        self.__sad_booking_places()
 
 

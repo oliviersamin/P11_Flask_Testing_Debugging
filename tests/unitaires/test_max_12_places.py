@@ -3,6 +3,8 @@ from P11_Flask_Testing_Debugging import server
 import json
 
 
+
+
 @pytest.mark.max_12_places
 class Test_max_12_places:
 
@@ -81,3 +83,4 @@ class Test_max_12_places:
         resp = client.post('/purchasePlaces', data=data)
         # assert resp.status_code == 200
         assert expected_flash_message in resp.data.decode()
+
