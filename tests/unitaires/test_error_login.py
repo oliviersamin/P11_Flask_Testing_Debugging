@@ -2,7 +2,7 @@ import pytest
 from P11_Flask_Testing_Debugging import server
 from flask import url_for
 
-
+@pytest.mark.all_tests
 @pytest.mark.login_error
 def test_error_login_valid_email_used(client, load_clubs):
     """ test using an email existing in the clubs.json file (mocked)"""

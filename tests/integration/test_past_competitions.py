@@ -4,6 +4,7 @@ import time as t
 import json
 
 
+@pytest.mark.all_tests
 @pytest.mark.past_competition
 class TestPastCompetition:
     future_competition = {"name": "Test_competition_in_future",

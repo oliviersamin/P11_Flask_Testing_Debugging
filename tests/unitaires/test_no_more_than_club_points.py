@@ -2,6 +2,8 @@ import pytest
 from P11_Flask_Testing_Debugging import server
 import time as t
 
+
+@pytest.mark.all_tests
 @pytest.mark.no_more_than_club_points
 class Test_no_more_than_club_points:
 

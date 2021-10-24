@@ -2,6 +2,8 @@ import pytest
 from P11_Flask_Testing_Debugging import server
 import json
 
+
+@pytest.mark.all_tests
 @pytest.mark.points_updated
 class Test_points_updated:
     valid_number_of_places = 1

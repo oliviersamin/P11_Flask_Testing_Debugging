@@ -4,7 +4,7 @@ import json
 
 
 
-
+@pytest.mark.all_tests
 @pytest.mark.max_12_places
 class Test_max_12_places:
 
