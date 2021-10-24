@@ -1,0 +1,23 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Summary | GUDLFT List of club points</title>
+</head>
+    <body>
+    <h1>List of all clubs and points</h1>
+
+    <div name="login_link">To login and access to reservations
+        <a href="{{url_for('index')}}">Click here</a>
+    </div>
+
+    <ul>
+        {% for club in clubs%}
+            <li>
+                club: {{club['name']}} ------ {{club['points']}} points<br>
+            </li>
+        {% endfor %}
+    </ul>
+
+    </body>
+</html>

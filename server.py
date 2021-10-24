@@ -119,7 +119,11 @@ def purchasePlaces():
         flash('ERROR: The number of places booked is not a positive integer')
         return render_template('welcome.html', club=club, competitions=competitions)
 
-# TODO: Add route for points display
+
+@app.route('/listOfClubPoints', methods=['GET'])
+def list_of_club_points():
+    clubs = loadClubs()
+    return render_template('list_of_club_points.html', clubs=clubs)
 
 
 @app.route('/logout')
