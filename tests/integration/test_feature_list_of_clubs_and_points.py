@@ -2,7 +2,7 @@ import pytest
 from P11_Flask_Testing_Debugging import server
 import time as t
 
-
+@pytest.mark.all_tests
 @pytest.mark.new_feature
 class TestNewFeature:
 

@@ -3,8 +3,8 @@ import pytest
 import time
 import json
 
-
-# @pytest.mark.max_12_places
+@pytest.mark.functional_tests
+@pytest.mark.max_12_places
 class TestWithSelenium:
 
     futur_competition = {"name": "Futur_competition", "date": "2022-03-27 10:00:00", "numberOfPlaces": "200"}

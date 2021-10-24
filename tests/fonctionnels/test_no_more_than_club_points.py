@@ -5,6 +5,7 @@ import time
 import json
 
 
+@pytest.mark.functional_tests
 @pytest.mark.no_more_than_club_points
 class TestWithSelenium:
 

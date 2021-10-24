@@ -2,7 +2,7 @@ from selenium.webdriver import Chrome
 import pytest
 import time
 
-
+@pytest.mark.functional_tests
 @pytest.mark.login_error
 class TestWithSelenium:
     def __open_site_with_Chrome(self):

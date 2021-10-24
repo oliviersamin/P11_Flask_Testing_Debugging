@@ -5,6 +5,7 @@ import time
 import json
 
 
+@pytest.mark.functional_tests
 @pytest.mark.past_competition
 class TestWithSelenium:
 

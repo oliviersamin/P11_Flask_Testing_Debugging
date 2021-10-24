@@ -4,6 +4,7 @@ import time
 import json
 
 
+@pytest.mark.functional_tests
 @pytest.mark.points_updated
 class TestWithSelenium:
 
@@ -43,7 +44,7 @@ class TestWithSelenium:
     def teardown_method(self, method):
         self.__tear_down_competitions()
 
-    def __open_site_with_chrome(self):
+    def __open_site_with_Chrome(self):
         self.browser = Chrome("chromedriver")
         self.browser.get("http://127.0.0.1:5000/")
 
