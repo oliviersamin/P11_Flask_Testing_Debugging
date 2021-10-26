@@ -11,6 +11,7 @@ class TestWithSelenium:
     future_competition = {"name": "Test_competition_in_future",
                           "date": "2022-03-27 10:00:00",
                           "numberOfPlaces": "200"}
+    club = [{"name": "Club_test", "email": "test@test.com", "points": "100"}]
 
     def load_clubs(self):
         """ load the data from 'clubs.json' and override the clubs variable from server.py """
@@ -32,22 +33,39 @@ class TestWithSelenium:
         with open('competitions.json', 'w') as comps:
             json.dump(compets, comps)
 
+    def __setup_club(self):
+        clubs = self.load_clubs()
+        for c in self.club:
+            clubs.append(c)
+        clubs = {'clubs': clubs}
+        with open('clubs.json', 'w') as comps:
+                json.dump(clubs, comps)
+
     def __teardown_competitions_json_file(self):
         compets = self.load_competitions()
         compets['competitions'] = compets['competitions'][:-1]
         with open('competitions.json', 'w') as comps:
             json.dump(compets, comps)
 
+    def __tear_down_club(self):
+        clubs = self.load_clubs()
+        clubs = clubs[:3]
+        clubs = {'clubs': clubs}
+        with open('clubs.json', 'w') as comps:
+            json.dump(clubs, comps)
+
 
     def setup_method(self, method):
         # server.clubs = self.load_clubs()
         self.__setup_competitions_json_file()
-        server.competitions = self.load_competitions()
+        self.__setup_club()
+        # server.competitions = self.load_competitions()
 
     def teardown_method(self, method):
         # server.clubs = self.load_clubs()
         self.__teardown_competitions_json_file()
-        server.competitions = self.load_competitions()
+        self.__tear_down_club()
+        # server.competitions = self.load_competitions()
 
     def __open_site_with_Chrome(self):
         self.browser = Chrome("chromedriver")
