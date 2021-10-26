@@ -62,7 +62,7 @@ class Test_points_updated:
             if 'How many places?' in resp.data.decode():  # if booking page reached
                 # HAPPY PATH: book places with a valid positive integer as number of places
                 data = {'competition': competition['name'], 'club': club['name'], 'places': self.valid_number_of_places}
-                club['points'] = str(int(club['points']) - int(data['places']))
+                club['points'] = str(int(club['points']) - 3 * int(data['places']))
                 resp = client.post('/purchasePlaces', data=data)
                 welcome_message = "Welcome, " + club['email']
                 points_updated = "Points available: " + club['points']

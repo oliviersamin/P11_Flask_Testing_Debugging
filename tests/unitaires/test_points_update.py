@@ -98,7 +98,7 @@ class Test_points_updated:
         data = {'competition': compet['name'],
                 'club': club['name'],
                 'places': '1'}
-        club['points'] = str(int(club['points']) - int(data['places']))
+        club['points'] = str(int(club['points']) - int(data['places']) * 3)
         resp = client.post('/purchasePlaces', data=data)
         welcome_message = "Welcome, " + club['email']
         points_updated = "Points available: " + club['points']

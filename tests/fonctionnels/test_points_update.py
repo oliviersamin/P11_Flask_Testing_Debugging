@@ -84,7 +84,7 @@ class TestWithSelenium:
             print("self.final_points = ", self.final_points)
             body = self.browser.find_element_by_tag_name("body")
             assert booking_message in body.text
-            assert self.final_points == (self.initial_points - int(number_of_places))
+            assert self.final_points == (self.initial_points - 3 * int(number_of_places))
         else:  # SAD PATH
             error_message = 'ERROR: The number of places booked is not a positive integer'
             body = self.browser.find_element_by_tag_name("body")
