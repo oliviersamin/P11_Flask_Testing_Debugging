@@ -6,6 +6,7 @@ cffi==1.15.0
 charset-normalizer==2.0.7
 click==7.1.2
 ConfigArgParse==1.5.3
+coverage==6.0.2
 cryptography==35.0.0
 Flask==2.0.2
 Flask-BasicAuth==0.2.0
@@ -30,6 +31,7 @@ pycparser==2.20
 pyOpenSSL==21.0.0
 pyparsing==2.4.7
 pytest==6.2.5
+pytest-cov==3.0.0
 pytest-mock==3.6.1
 pyzmq==22.3.0
 requests==2.26.0
@@ -39,6 +41,7 @@ six==1.16.0
 sniffio==1.2.0
 sortedcontainers==2.4.0
 toml==0.10.2
+tomli==1.2.2
 trio==0.19.0
 trio-websocket==0.9.2
 typing-extensions==3.10.0.2
