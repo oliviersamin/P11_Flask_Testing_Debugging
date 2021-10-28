@@ -2,6 +2,8 @@ import pytest
 from P11_Flask_Testing_Debugging import server
 import json
 
+
+@pytest.mark.all_tests
 @pytest.mark.points_updated
 class Test_points_updated:
 
@@ -95,13 +97,14 @@ class Test_points_updated:
         after a reservation"""
         compet = server.competitions[-1]
         club = server.clubs[0]
+        starting_points = club['points']
         data = {'competition': compet['name'],
                 'club': club['name'],
                 'places': '1'}
-        club['points'] = str(int(club['points']) - int(data['places']) * 3)
+        expected_points_updated = str(int(starting_points) - int(data['places']) * 3)
         resp = client.post('/purchasePlaces', data=data)
         welcome_message = "Welcome, " + club['email']
-        points_updated = "Points available: " + club['points']
+        points_updated = "Points available: " + expected_points_updated
         assert resp.status_code == 200
         assert welcome_message in resp.data.decode()
         assert "Great-booking complete!" in resp.data.decode()
