@@ -7,7 +7,9 @@ import json
 @pytest.mark.all_tests
 @pytest.mark.past_competition
 class TestPastCompetition:
+    """ This test check that no one can book a competition that is in the past """
 
+    ##### SETUP THE TEST ######
     future_competition = {"name": "Test_competition_in_future",
                           "date": "2022-03-27 10:00:00",
                           "numberOfPlaces": "200"}
@@ -40,6 +42,9 @@ class TestPastCompetition:
         server.clubs = self.load_clubs()
         server.competitions = self.load_competitions()
 
+    ##### END OF THE SETUP ######
+
+    # SAD PATH TEST
     def test_past_competition_access(self, client):
         club = server.clubs[0]
         for competition in server.competitions:
@@ -47,6 +52,7 @@ class TestPastCompetition:
                 resp = client.get('/book/{}/{}'.format(competition['name'], club['name']))
                 assert "ERROR: This competition is over" in resp.data.decode()
 
+    # HAPPY PATH TEST
     def test_future_competition_access(self, client):
         club = server.clubs[0]
         for competition in server.competitions:

@@ -7,6 +7,8 @@ import json
 @pytest.mark.all_tests
 @pytest.mark.max_12_places
 class Test_max_12_places:
+    """ This test check that no club can book more than 12 places for one competition
+     Otherwise an error message is returned"""
 
     club = [{"name": "Simply Lift", "email": "john@simplylift.co", "points": "200"}]
 

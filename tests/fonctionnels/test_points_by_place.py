@@ -78,6 +78,7 @@ class TestWithSelenium:
     def teardown_method(self, method):
         self.__tear_down_competitions()
         self.__tear_down_club()
+
     #######  end of setup #########
 
 

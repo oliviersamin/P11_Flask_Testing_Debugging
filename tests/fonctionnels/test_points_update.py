@@ -7,10 +7,17 @@ import json
 @pytest.mark.functional_tests
 @pytest.mark.points_updated
 class TestWithSelenium:
+    """ This test checks that the balance points of a club is updated after a valid booking.
+    Here are the steps used:
+    Step 1: Login
+    Step 2: Select a futur competition to book places
+    Step 3: Happy path = Book a valid number of places
+    Step 4: Check that the booking message is displayed
+    Step 5: Sad path = Book a non valid number of places
+    Step 6: Check that an error message is displayed"""
 
+    #### SET UP THE TESTS #####
     futur_competition = {"name": "Futur_competition", "date": "2022-03-27 10:00:00", "numberOfPlaces": "200"}
-
-    "Points available: "
 
     def __get_points_from_string(self, string_to_use):
         string_to_use = string_to_use[::-1]
@@ -44,12 +51,15 @@ class TestWithSelenium:
     def teardown_method(self, method):
         self.__tear_down_competitions()
 
-    def __open_site_with_Chrome(self):
+    #### ENF OF THE SET UP #####
+
+    #### METHODS USED FOR THE TESTS ####
+    def __open_site_with_chrome(self):
         self.browser = Chrome("chromedriver")
         self.browser.get("http://127.0.0.1:5000/")
 
     def __login(self):
-        self.__open_site_with_Chrome()
+        self.__open_site_with_chrome()
         # enter valid data to get to the welcome page
         email = self.browser.find_element_by_name("email")
         secretary_email = "john@simplylift.co"
@@ -92,6 +102,7 @@ class TestWithSelenium:
 
         self.browser.close()
 
+    #### TESTS ####
     def test_happy_path(self):
         self.__login()
         self.__select_the_futur_competition()

@@ -7,7 +7,16 @@ import json
 @pytest.mark.all_tests
 @pytest.mark.max_12_places
 class Test_max_12_places:
+    """ This test checks that no club can book more than 12 places for one competition.
+    Here are the steps used:
+    Step 1: Connexion to login page
+    Step 2: When login successfull go to the booking page of a future competition
+    Step 3: Book 10 place = Happy path
+    Step 4: Go back to the welcome page and check the booking has been made
+    Step 5: Use more points than 12 places = Sad path
+    Step 6: Check that an error message is displayed on the page"""
 
+    ##### SETUP THE TEST #####
     valid_number_of_places = 10
     wrong_number_of_places = 13
 
@@ -74,30 +83,33 @@ class Test_max_12_places:
         diff = result - t.time()
         return diff > 0
 
-    def test_max_12_places(self, client):
-        """ this test check the happy path (the number of places is <= 12)
-        and the sad path (the number of places is > 12) for the booking process """
+    ##### END OF THE SETUP #####
 
-        # préparation des données utilisées pour le test
+    def test_max_12_places(self, client):
+        """ This test gathers all the steps described in the docstring of this class """
+
         club = server.clubs[-1]
         competition = server.competitions[-1]
-
-        # connexion to site through the login page
+        # Step 1
         resp = client.post('/showSummary', data={'email': club['email']})
         expected_value = 'Welcome, ' + club['email']
         if expected_value in resp.data.decode():  # if login OK
-            # go to the booking page for the selected competition
+            # Step 2
             resp = client.get('/book/{}/{}'.format(competition['name'], club['name']))
             if 'How many places?' in resp.data.decode():  # if booking page reached
+                # Step 3
                 # HAPPY PATH: book number of places < 12
                 data = {'competition': competition['name'], 'club': club['name'], 'places': self.valid_number_of_places}
                 resp = client.post('/purchasePlaces', data=data)
+                # Step 4
                 welcome_message = "Welcome, " + club['email']
                 assert welcome_message in resp.data.decode()
                 assert "Great-booking complete!" in resp.data.decode()
+                # Step 5
                 # SAD PATH: book places with a non positive integer as number of places
                 data = {'competition': competition['name'], 'club': club['name'], 'places': self.wrong_number_of_places}
                 resp = client.post('/purchasePlaces', data=data)
+                # Step 6
                 error_message = 'ERROR: The maximum places to be reserved by club is 12'
                 assert error_message in resp.data.decode()
         else:  # if login error by wrong credentials

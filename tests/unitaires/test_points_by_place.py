@@ -6,6 +6,8 @@ import json
 @pytest.mark.all_tests
 @pytest.mark.points_by_place
 class Test_points_updated:
+    """ This test correspond to a new feature asked during the project testing
+     Check that one place booked correspond to 3 points of the club balance"""
 
     club = [{"name": "Club_test", "email": "test@test.com", "points": "100"}]
 
@@ -19,9 +21,7 @@ class Test_points_updated:
         compet = server.competitions[-1]
         club = server.clubs[-1]
         club_points_at_start = int(club['points'])
-        data = {'competition': compet['name'],
-                'club': club['name'],
-                'places': '1'}
+        data = {'competition': compet['name'], 'club': club['name'], 'places': '1'}
         resp = client.post('/purchasePlaces', data=data)
         welcome_message = "Welcome, " + club['email']
         points_updated = "Points available: " + club['points']

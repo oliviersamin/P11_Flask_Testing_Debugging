@@ -5,7 +5,15 @@ import json
 
 @pytest.mark.all_tests
 @pytest.mark.points_by_place
-class Test_points_updated:
+class TestPointsByPlace:
+    """ This test checks that the correct amount of points has been taken from the club balance
+     points when 1 place has been booked. To do so here are the several steps:
+    Step 1: Connexion to login page
+    Step 2: When login successfull go to the booking page of a future competition
+    Step 3: Book 1 place
+    Step 4: Go back to the welcome page and check the club balance points lost 3 points"""
+
+    ##### SETUP THE TEST #####
     valid_number_of_places = 1
     future_competition = {"name": "Test_competition_in_future",
                           "date": "2022-03-27 10:00:00",
@@ -67,11 +75,12 @@ class Test_points_updated:
         server.clubs = self.load_clubs()
         server.competitions = self.load_competitions()
 
-    def test_points_updated(self, client):
-        """ This test check the modification of points by place
-             Step 1: connexion to site using a club with sufficient points
-             Step 2: select a futur competition to book a place
-             Step 3: book a place and check the value of the updated points in the club balance"""
+    ##### END OF THE SETUP #####
+
+
+    def test_points_by_place(self, client):
+        """ This test check the modification of points by place following the steps described
+        in the docstring of this class"""
 
         # test setup data
         competition = server.competitions['competitions'][-1]
@@ -83,10 +92,11 @@ class Test_points_updated:
             # Step 2
             resp = client.get('/book/{}/{}'.format(competition['name'], club['name']))
             if 'How many places?' in resp.data.decode():  # if booking page reached
-                # book 1 place
+                # Step 3
                 data = {'competition': competition['name'], 'club': club['name'], 'places': '1'}
                 # club['points'] = str(int(club['points']) - int(data['places']))
                 resp = client.post('/purchasePlaces', data=data)
+                # Step 4
                 expected_points = str(int(club['points']) - 3 * int(data['places']))
                 welcome_message = "Welcome, " + club['email']
                 points_updated = "Points available: " + expected_points

@@ -6,6 +6,8 @@ import time as t
 @pytest.mark.all_tests
 @pytest.mark.no_more_than_club_points
 class Test_no_more_than_club_points:
+    """ This test check that no club can book more than its balance points
+     An error message shall be written otherwise"""
 
     def __is_in_future(self, competition):
         date_format = "%Y-%m-%d %H:%M:%S"
@@ -13,7 +15,6 @@ class Test_no_more_than_club_points:
         result = t.mktime(result)
         diff = result - t.time()
         return diff > 0
-
 
     @pytest.mark.parametrize("data,expected_flash_message",
                              [({'places': '1'},

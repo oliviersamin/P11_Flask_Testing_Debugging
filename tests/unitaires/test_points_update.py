@@ -6,7 +6,15 @@ import json
 @pytest.mark.all_tests
 @pytest.mark.points_updated
 class Test_points_updated:
+    """ This test needs several steps as this is the first one implemented after the login error.
+     In order to validate that the points have been updated properly one first need to be sure that:
+     Step 1: The club balance points is a positive integer
+     Step 2: The competition number of places is a positive integer
+     Step 3: The number of places booked is a positive integer
+     Step 4: At last that the club balance points has been properly updated
+     For each of these step an error message needs to be dsplayed if needed"""
 
+    ####### SETUP OF THE TEST  ###########
     club = [{"name": "Simply Lift", "email": "john@simplylift.co", "points": "-13"},
             {"name": "Simply Lift", "email": "john@simplylift.co", "points": "AA/13"},
             {"name": "Simply Lift", "email": "john@simplylift.co", "points": "3.1"}]
@@ -68,6 +76,9 @@ class Test_points_updated:
         self.__tear_down_club()
         self.__tear_down_competitions()
 
+    ####### END OF SETUP ###########
+
+    # Step 1
     def test_club_points_is_not_positive_integer(self, client):
         """ check that the points in the club input are positive integer """
         for club in server.clubs[3:]:
@@ -77,6 +88,7 @@ class Test_points_updated:
             expected_message = "ERROR: The number of points for the club is not a positive integer"
             assert expected_flash_message in resp.data.decode()
 
+    # Step 2
     def test_competition_number_of_places_is_not_positive_integer(self, client):
         """ check that the number of places in the competition input is positive integer """
         data = {'email': server.clubs[0]['email']}
@@ -84,6 +96,7 @@ class Test_points_updated:
         expected_message = "ERROR: The number of places is not a positive integer"
         assert expected_message in resp.data.decode()
 
+    # Step 3
     def test_booking_places_is_not_positive_integer(self, client):
         """ check that the number of places asked is a positive integer"""
         competition_in_futur = server.competitions[-1]
@@ -92,6 +105,7 @@ class Test_points_updated:
         expected_flash_message = "ERROR: The number of places booked is not a positive integer"
         assert expected_flash_message in resp.data.decode()
 
+    # Step 4
     def test_club_points_updated(self, client, load_clubs):
         """ check that with positive integers numbers, the balance od point of the club is updated
         after a reservation"""
