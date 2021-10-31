@@ -8,7 +8,17 @@ import json
 @pytest.mark.functional_tests
 @pytest.mark.no_more_than_club_points
 class TestWithSelenium:
+    """ This test checks that no club can book more than its balance club points.
+    Here are the steps to do it:
+    Step 1: Go to the login page
+    Step 2: From this page login to access the home page
+    Step 3: From this page choose a competition (in the future) to book places
+    Step 4: HAPPY PATH = From there book less than its club balance points
+    Step 5: Check that the page confirm the booking
+    Step 6: SAD PATH = once clicked on the booking link book more than its club balance points
+    Step 7: Check that the page displays an error message"""
 
+    ##### SETUP OF THE TESTS #####
     futur_competition = {"name": "Futur_competition", "date": "2022-03-27 10:00:00", "numberOfPlaces": "200"}
     club = [{"name": "Test_club", "email": "test_club@test.com", "points": "8"}]
 
@@ -19,13 +29,11 @@ class TestWithSelenium:
         return(int(string_to_use))
 
     def load_clubs(self):
-        """ load the data from 'clubs.json' and override the clubs varable from server.py """
         with open('clubs.json') as c:
             clubs = json.load(c)['clubs']
             return clubs
 
     def load_competitions(self):
-        """ load the data from 'clubs.json' and override the competitions varable from server.py """
         with open('competitions.json') as comps:
             competitions = json.load(comps)['competitions']
             return competitions
@@ -68,12 +76,16 @@ class TestWithSelenium:
         self.__tear_down_competitions()
         self.__tear_down_club()
 
-    def __open_site_with_Chrome(self):
+    ##### END OF SETUP #####
+
+    # Step 1
+    def __open_site_with_chrome(self):
         self.browser = Chrome("chromedriver")
         self.browser.get("http://127.0.0.1:5000/")
 
+    # Step 2
     def __login(self):
-        self.__open_site_with_Chrome()
+        self.__open_site_with_chrome()
         # enter valid data to get to the welcome page
         email = self.browser.find_element_by_name("email")
         secretary_email = "test_club@test.com"
@@ -82,14 +94,16 @@ class TestWithSelenium:
         time.sleep(2)
         validate.click()
 
+    # Step 3
     def __select_future_competition(self):
         links = self.browser.find_elements_by_tag_name("a")
-        for l in links:
-            if (l.text == "Book Places") & ("Futur_competition" in l.get_attribute("href")):
+        for link in links:
+            if (link.text == "Book Places") & ("Futur_competition" in link.get_attribute("href")):
                 time.sleep(2)
-                l.click()
+                link.click()
                 break
 
+    # Steps 4 & 5
     def __happy_booking_places(self):
         places = self.browser.find_element_by_name("places")
         places.send_keys("1")
@@ -102,6 +116,7 @@ class TestWithSelenium:
         assert booking_message in body.text
         self.browser.close()
 
+    # Steps 6 & 7
     def __sad_booking_places(self):
         places = self.browser.find_element_by_name("places")
         places.send_keys("10")
@@ -114,12 +129,13 @@ class TestWithSelenium:
         assert booking_message in body.text
         self.browser.close()
 
-
+    # All steps for happy path
     def test_happy_path(self):
         self.__login()
         self.__select_future_competition()
         self.__happy_booking_places()
 
+    # All tests for sad path
     def test_sad_path(self):
         self.__login()
         self.__select_future_competition()

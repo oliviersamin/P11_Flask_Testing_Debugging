@@ -8,17 +8,19 @@ import json
 @pytest.mark.functional_tests
 @pytest.mark.new_feature
 class TestWithSelenium:
-    """ Step 1: From home page go to the new feature's page
-        Step 2: From this page go back to home page
-        Step 3: From this page login"""
+    """ This test checks that every user can see a list with clubs names and therir related balance points without
+    need to be connected to the site. Here are the steps to do it:
+    Step 1: From home page go to the new feature's page
+    Step 2: From this page go back to home page
+    Step 3: From this page login"""
 
-    def __open_site_with_Chrome(self):
+    def __open_site_with_chrome(self):
         self.browser = Chrome("chromedriver")
         self.browser.get("http://127.0.0.1:5000/")
 
     def __go_to_new_feature_page(self):
         """ Step 1"""
-        self.__open_site_with_Chrome()
+        self.__open_site_with_chrome()
         links = self.browser.find_elements_by_tag_name("a")
         for l in links:
             if (l.text == "Click here"):
@@ -34,7 +36,6 @@ class TestWithSelenium:
                 time.sleep(2)
                 l.click()
                 break
-
 
     def __login(self):
         """ Step 3"""

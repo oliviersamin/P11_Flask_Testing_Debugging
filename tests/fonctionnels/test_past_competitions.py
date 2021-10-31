@@ -8,26 +8,32 @@ import json
 @pytest.mark.functional_tests
 @pytest.mark.past_competition
 class TestWithSelenium:
+    """ This test checks that no club can book places for a past competition.
+    Here are the steps to do it:
+    Step 1: Go to the login page
+    Step 2: From this page login to access the home page
+    Step 3: HAPPY PATH = from this page choose a competition in the future to book places
+    Step 4: Check that the page confirm the booking
+    Step 5: SAD PATH = from the home page choose a competition in the past to book places
+    Step 6: Check that the page displays an error message"""
 
+    ##### SETUP OF THE TESTS #####
     future_competition = {"name": "Test_competition_in_future",
                           "date": "2022-03-27 10:00:00",
                           "numberOfPlaces": "200"}
     club = [{"name": "Club_test", "email": "test@test.com", "points": "100"}]
 
     def load_clubs(self):
-        """ load the data from 'clubs.json' and override the clubs variable from server.py """
         with open('clubs.json') as c:
             clubs = json.load(c)['clubs']
             return clubs
 
     def load_competitions(self):
-        """ load the data from 'clubs.json' and override the competitions varable from server.py """
         with open('competitions.json') as comps:
             competitions = json.load(comps)
             return competitions
 
     def __setup_competitions_json_file(self):
-        """ insert needed data for the tests and save the json """
         compets = self.load_competitions()
         compets['competitions'].append(self.future_competition)
         # compets = json.dumps(compets)
@@ -55,25 +61,23 @@ class TestWithSelenium:
         with open('clubs.json', 'w') as comps:
             json.dump(clubs, comps)
 
-
     def setup_method(self, method):
-        # server.clubs = self.load_clubs()
         self.__setup_competitions_json_file()
         self.__setup_club()
-        # server.competitions = self.load_competitions()
 
     def teardown_method(self, method):
-        # server.clubs = self.load_clubs()
         self.__teardown_competitions_json_file()
         self.__tear_down_club()
-        # server.competitions = self.load_competitions()
 
-    def __open_site_with_Chrome(self):
+    ##### END OF SETUP #####
+    # Step 1
+    def __open_site_with_chrome(self):
         self.browser = Chrome("chromedriver")
         self.browser.get("http://127.0.0.1:5000/")
 
+    # Step 2
     def __login(self):
-        self.__open_site_with_Chrome()
+        self.__open_site_with_chrome()
         # enter valid data to get to the welcome page
         email = self.browser.find_element_by_name("email")
         secretary_email = "john@simplylift.co"
@@ -82,6 +86,7 @@ class TestWithSelenium:
         time.sleep(2)
         validate.click()
 
+    # Step 3
     def __booking_places(self):
         places = self.browser.find_element_by_name("places")
         places.send_keys("1")
@@ -90,25 +95,26 @@ class TestWithSelenium:
         validate.click()
         time.sleep(2)
 
+    # Step 6 & 7
     def __sad_path(self):
         links = self.browser.find_elements_by_tag_name("a")
-        for l in links:
-            if (l.text == "Book Places") & ("Spring" in l.get_attribute("href")):
-                print("selected = ", l.get_attribute("href"), flush=True)
+        for link in links:
+            if (link.text == "Book Places") & ("Spring" in link.get_attribute("href")):
                 time.sleep(2)
-                l.click()
+                link.click()
                 break
         booking_message = "ERROR: This competition is over"
         body = self.browser.find_element_by_tag_name("body")
         assert booking_message in body.text
         self.browser.close()
 
+    # Step 4 & 5
     def __happy_path(self):
         links = self.browser.find_elements_by_tag_name("a")
-        for l in links:
-            if (l.text == "Book Places") & ("Test_competition_in_future" in l.get_attribute("href")):
+        for link in links:
+            if (link.text == "Book Places") & ("Test_competition_in_future" in link.get_attribute("href")):
                 time.sleep(2)
-                l.click()
+                link.click()
                 break
         self.__booking_places()
         booking_message = "Great-booking complete!"
@@ -116,10 +122,12 @@ class TestWithSelenium:
         assert booking_message in body.text
         self.browser.close()
 
+    # All Steps for sad path
     def test_sad_path(self):
         self.__login()
         self.__sad_path()
 
+    # All Steps for happy path
     def test_happy_path(self):
         self.__login()
         self.__happy_path()

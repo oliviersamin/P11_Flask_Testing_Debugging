@@ -3,6 +3,8 @@ import server
 
 
 class TestPerformance(HttpUser):
+    """ This test check the pergormance to reach each page of the website.
+     Therefore each method correspond to one page of the website"""
 
     @task(6)
     def access_index(self):

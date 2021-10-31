@@ -9,13 +9,14 @@ import json
 @pytest.mark.points_by_place
 class TestWithSelenium:
     """ Test the change in number of points needed to book a place
-     Step 1: Login
-     Step 2: Choose a competition in the futur
-     Step 3: Book a place in this competition
-     Step 4: Check that the correct amount of point has been removed to the club balance points
+    Step 1: Go to the login page
+    Step 2: From this page login to access the home page
+    Step 3: Choose a competition in the futur
+    Step 4: Book a place in this competition
+    Step 5: Check that the correct amount of point has been removed to the club balance points
      """
 
-    ##### Steup the data and the test ########
+    ##### SETUP OF THE TEST ########
     futur_competition = {"name": "Test_competition_in_future",
                           "date": "2022-03-27 10:00:00",
                           "numberOfPlaces": "200"}
@@ -31,13 +32,11 @@ class TestWithSelenium:
         return(int(string_to_use))
 
     def load_clubs(self):
-        """ load the data from 'clubs.json' and override the clubs varable from server.py """
         with open('clubs.json') as c:
             clubs = json.load(c)['clubs']
             return clubs
 
     def load_competitions(self):
-        """ load the data from 'clubs.json' and override the competitions varable from server.py """
         with open('competitions.json') as comps:
             competitions = json.load(comps)['competitions']
             return competitions
@@ -79,14 +78,14 @@ class TestWithSelenium:
         self.__tear_down_competitions()
         self.__tear_down_club()
 
-    #######  end of setup #########
+    #######  END OF SETUP #########
 
-
+    # Step 1
     def __open_site_with_chrome(self):
         self.browser = Chrome("chromedriver")
         self.browser.get("http://127.0.0.1:5000/")
 
-    # Step 1
+    # Step 2
     def __login(self):
         self.__open_site_with_chrome()
         # enter valid data to get to the welcome page
@@ -97,16 +96,16 @@ class TestWithSelenium:
         time.sleep(2)
         validate.click()
 
-    # Step 2
+    # Step 3
     def __select_future_competition(self):
         links = self.browser.find_elements_by_tag_name("a")
-        for l in links:
-            if (l.text == "Book Places") & ("Test" in l.get_attribute("href")):
+        for link in links:
+            if (link.text == "Book Places") & ("Test" in link.get_attribute("href")):
                 time.sleep(2)
-                l.click()
+                link.click()
                 break
 
-    # Step 3
+    # Step 4
     def __booking_places(self):
         time.sleep(2)
         places = self.browser.find_element_by_name("places")
@@ -116,7 +115,7 @@ class TestWithSelenium:
         validate.click()
         time.sleep(2)
 
-    # Step 4
+    # Step 5
     def __check_amount_of_points_in_balance_club(self):
         booking_message = "Great-booking complete!"
         amount_of_points_expected = str(int(self.club[0]['points']) - 3 * int(self.amount_of_places))
