@@ -5,7 +5,7 @@ import time as t
 
 @pytest.mark.all_tests
 @pytest.mark.no_more_than_club_points
-class Test_no_more_than_club_points:
+class TestNoMoreThanClubPoints:
     """ This test check that no club can book more than its balance points
      An error message shall be written otherwise"""
 

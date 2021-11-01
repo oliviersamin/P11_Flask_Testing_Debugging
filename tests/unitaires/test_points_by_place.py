@@ -1,11 +1,10 @@
 import pytest
 from P11_Flask_Testing_Debugging import server
-import json
 
 
 @pytest.mark.all_tests
 @pytest.mark.points_by_place
-class Test_points_updated:
+class TestPointsByPlace:
     """ This test correspond to a new feature asked during the project testing
      Check that one place booked correspond to 3 points of the club balance"""
 

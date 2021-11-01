@@ -1,6 +1,5 @@
 import pytest
-from P11_Flask_Testing_Debugging import server
-from flask import url_for
+
 
 @pytest.mark.all_tests
 @pytest.mark.login_error
@@ -23,4 +22,3 @@ def test_error_login_invalid_email_used(client):
     assert resp.status_code == 200
     expected_value = 'This is not a valid email, please try again'
     assert expected_value in resp.data.decode()
-

@@ -17,14 +17,14 @@ class TestWithSelenium:
     Step 6: Sad path = Book a non valid number of places
     Step 7: Check that an error message is displayed"""
 
-    #### SET UP THE TESTS #####
+    # SET UP THE TESTS #####
     futur_competition = {"name": "Futur_competition", "date": "2022-03-27 10:00:00", "numberOfPlaces": "200"}
 
     def __get_points_from_string(self, string_to_use):
         string_to_use = string_to_use[::-1]
         string_to_use = string_to_use[:string_to_use.find(':')]
         string_to_use = string_to_use[::-1]
-        return(int(string_to_use))
+        return int(string_to_use)
 
     def load_competitions(self):
         with open('competitions.json') as comps:
@@ -36,7 +36,7 @@ class TestWithSelenium:
         compets.append(self.futur_competition)
         compets = {'competitions': compets}
         with open('competitions.json', 'w') as comps:
-                json.dump(compets, comps)
+            json.dump(compets, comps)
 
     def __tear_down_competitions(self):
         compet = self.load_competitions()
@@ -51,7 +51,7 @@ class TestWithSelenium:
     def teardown_method(self, method):
         self.__tear_down_competitions()
 
-    #### ENF OF THE SET UP #####
+    # ENF OF THE SET UP #####
 
     # Step 1
     def __open_site_with_chrome(self):
@@ -75,9 +75,9 @@ class TestWithSelenium:
         self.initial_points = self.__get_points_from_string(self.initial_points)
         links = self.browser.find_elements_by_tag_name("a")
         compets = []
-        for l in links:
-            if l.text == "Book Places":
-                compets.append(l)
+        for link in links:
+            if link.text == "Book Places":
+                compets.append(link)
         time.sleep(2)
         compets[-1].click()
 

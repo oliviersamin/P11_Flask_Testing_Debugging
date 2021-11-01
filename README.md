@@ -27,7 +27,13 @@ However here are the general observations to run the tests
 * The functional tests can be run on their own  
 To be able to run the tests follow the
   steps described in the following sections of this file.
-  
+
+### Conventions used
+* It has been decided to use PEP8 for this program  
+* All the corrections, features and tests will be written folowing the PEP8
+* As this program is a MVP and some code has already been written, the existing code will remain as it is until the QA has been validated
+* When the program is validated, all the code will be updated to PEP8 standard
+
 ### Steps to perform to run the program
 1. Clone the repo & install the virtual environment 
 2. Install the dependencies: `pip install -r requirements.txt`

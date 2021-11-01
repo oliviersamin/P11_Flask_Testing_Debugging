@@ -13,7 +13,7 @@ class TestPointsByPlace:
     Step 3: Book 1 place
     Step 4: Go back to the welcome page and check the club balance points lost 3 points"""
 
-    ##### SETUP THE TEST #####
+    # SETUP THE TEST #####
     valid_number_of_places = 1
     future_competition = {"name": "Test_competition_in_future",
                           "date": "2022-03-27 10:00:00",
@@ -75,8 +75,7 @@ class TestPointsByPlace:
         server.clubs = self.load_clubs()
         server.competitions = self.load_competitions()
 
-    ##### END OF THE SETUP #####
-
+    # END OF THE SETUP #####
 
     def test_points_by_place(self, client):
         """ This test check the modification of points by place following the steps described

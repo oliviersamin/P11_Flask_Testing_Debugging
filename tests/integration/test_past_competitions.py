@@ -79,4 +79,3 @@ class TestPastCompetition:
         else:  # if login error by wrong credentials
             error_message = 'This is not a valid email, please try again'
             assert error_message in resp.data.decode()
-

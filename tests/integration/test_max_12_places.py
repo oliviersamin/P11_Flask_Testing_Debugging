@@ -6,7 +6,7 @@ import json
 
 @pytest.mark.all_tests
 @pytest.mark.max_12_places
-class Test_max_12_places:
+class TestMax12Places:
     """ This test checks that no club can book more than 12 places for one competition.
     Here are the steps used:
     Step 1: Connexion to login page
@@ -16,7 +16,7 @@ class Test_max_12_places:
     Step 5: Use more points than 12 places = Sad path
     Step 6: Check that an error message is displayed on the page"""
 
-    ##### SETUP THE TEST #####
+    # SETUP THE TEST #####
     valid_number_of_places = 10
     wrong_number_of_places = 13
 
@@ -42,8 +42,7 @@ class Test_max_12_places:
             clubs.append(c)
         clubs = {'clubs': clubs}
         with open('clubs.json', 'w') as comps:
-                json.dump(clubs, comps)
-        clubs = self.load_clubs()
+            json.dump(clubs, comps)
 
     def __setup_competition(self):
         compets = self.load_competitions()
@@ -51,8 +50,7 @@ class Test_max_12_places:
             compets.append(c)
         compets = {'competitions': compets}
         with open('competitions.json', 'w') as comps:
-                json.dump(compets, comps)
-        compets = self.load_competitions()
+            json.dump(compets, comps)
 
     def __tear_down_club(self):
         clubs = self.load_clubs()
@@ -83,7 +81,7 @@ class Test_max_12_places:
         diff = result - t.time()
         return diff > 0
 
-    ##### END OF THE SETUP #####
+    # END OF THE SETUP #####
 
     def test_max_12_places(self, client):
         """ This test gathers all the steps described in the docstring of this class """

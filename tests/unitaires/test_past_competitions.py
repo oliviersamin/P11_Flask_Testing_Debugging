@@ -9,7 +9,7 @@ import json
 class TestPastCompetition:
     """ This test check that no one can book a competition that is in the past """
 
-    ##### SETUP THE TEST ######
+    # SETUP THE TEST ######
     future_competition = {"name": "Test_competition_in_future",
                           "date": "2022-03-27 10:00:00",
                           "numberOfPlaces": "200"}
@@ -22,13 +22,13 @@ class TestPastCompetition:
         return diff > 0
 
     def load_clubs(self):
-        """ load the data from 'clubs.json' and override the clubs varable from server.py """
+        """ load the data from 'clubs.json' and override the clubs variable from server.py """
         with open('clubs.json') as c:
             clubs = json.load(c)['clubs']
             return clubs
 
     def load_competitions(self):
-        """ load the data from 'clubs.json' and override the competitions varable from server.py """
+        """ load the data from 'clubs.json' and override the competitions variable from server.py """
         with open('competitions.json') as comps:
             competitions = json.load(comps)['competitions']
             return competitions
@@ -42,7 +42,7 @@ class TestPastCompetition:
         server.clubs = self.load_clubs()
         server.competitions = self.load_competitions()
 
-    ##### END OF THE SETUP ######
+    # END OF THE SETUP ######
 
     # SAD PATH TEST
     def test_past_competition_access(self, client):

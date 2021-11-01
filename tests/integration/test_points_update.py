@@ -5,14 +5,14 @@ import json
 
 @pytest.mark.all_tests
 @pytest.mark.points_updated
-class Test_points_updated:
+class TestPointsUpdated:
     """ This test  is made of the several steps:
     Step 1: Connexion to login page
     Step 2: When login successfull go to the booking page of a future competition
     Step 3: Book 1 place
     Step 4: Go back to the welcome page and check the value of the club balance points"""
 
-    ##### SETUP THE TEST #####
+    # SETUP THE TEST #####
     valid_number_of_places = 1
     wrong_number_of_places = -1
     future_competition = {"name": "Test_competition_in_future",
@@ -53,7 +53,7 @@ class Test_points_updated:
         self.__teardown_competitions_json_file()
         server.competitions = self.load_competitions()
 
-    ##### END OF THE SETUP #####
+    # END OF THE SETUP #####
 
     def test_points_updated(self, client):
         """ This steps gather all the steps described in the docstring of this class """

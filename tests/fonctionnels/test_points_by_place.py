@@ -1,5 +1,4 @@
 from selenium.webdriver import Chrome
-from P11_Flask_Testing_Debugging import server
 import pytest
 import time
 import json
@@ -16,10 +15,9 @@ class TestWithSelenium:
     Step 5: Check that the correct amount of point has been removed to the club balance points
      """
 
-    ##### SETUP OF THE TEST ########
-    futur_competition = {"name": "Test_competition_in_future",
-                          "date": "2022-03-27 10:00:00",
-                          "numberOfPlaces": "200"}
+    # SETUP OF THE TEST ########
+    futur_competition = {"name": "Test_competition_in_future", "date": "2022-03-27 10:00:00",
+                         "numberOfPlaces": "200"}
 
     club = [{"name": "Club_test", "email": "test@test.com", "points": "100"}]
 
@@ -29,7 +27,7 @@ class TestWithSelenium:
         string_to_use = string_to_use[::-1]
         string_to_use = string_to_use[:string_to_use.find(':')]
         string_to_use = string_to_use[::-1]
-        return(int(string_to_use))
+        return int(string_to_use)
 
     def load_clubs(self):
         with open('clubs.json') as c:
@@ -46,7 +44,7 @@ class TestWithSelenium:
         compets.append(self.futur_competition)
         compets = {'competitions': compets}
         with open('competitions.json', 'w') as comps:
-                json.dump(compets, comps)
+            json.dump(compets, comps)
 
     def __setup_club(self):
         clubs = self.load_clubs()
@@ -54,7 +52,7 @@ class TestWithSelenium:
             clubs.append(c)
         clubs = {'clubs': clubs}
         with open('clubs.json', 'w') as comps:
-                json.dump(clubs, comps)
+            json.dump(clubs, comps)
 
     def __tear_down_competitions(self):
         compet = self.load_competitions()
@@ -78,7 +76,7 @@ class TestWithSelenium:
         self.__tear_down_competitions()
         self.__tear_down_club()
 
-    #######  END OF SETUP #########
+    #  END OF SETUP #########
 
     # Step 1
     def __open_site_with_chrome(self):
@@ -131,5 +129,3 @@ class TestWithSelenium:
         self.__select_future_competition()
         self.__booking_places()
         self.__check_amount_of_points_in_balance_club()
-
-

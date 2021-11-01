@@ -12,7 +12,6 @@ class TestWithSelenium:
      Step 3: Sad path = Enter a non valid email in the login page
      Step 4: Check that an error message is displayed on the page"""
 
-
     def __open_site_with_chrome(self):
         self.browser = Chrome("chromedriver")
         self.browser.get("http://127.0.0.1:5000/")

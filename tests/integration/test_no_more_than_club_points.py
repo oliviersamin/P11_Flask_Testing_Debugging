@@ -1,6 +1,5 @@
 import pytest
 from P11_Flask_Testing_Debugging import server
-import time as t
 
 
 @pytest.mark.all_tests
@@ -14,11 +13,10 @@ class TestNoMoreThanClubPoints:
     Step 5: Use more points than its club balance to book places = Sad path
     Step 6: Check that an error message is displayed on the page"""
 
-
     def test_no_more_than_club_points(self, client, load_competitions, mocker):
         """ This test gathers all the steps described in the docstring of this class """
 
-        ####### SETUP OF THE TEST ##########
+        # SETUP OF THE TEST ##########
         mocker.patch.object(server, 'clubs', [{"name": "Test_club",
                                                "email": "test_club@test.com", "points": "8"}])
         mocker.patch.object(server, 'competitions', [{"name": "Test_competition",
@@ -27,7 +25,7 @@ class TestNoMoreThanClubPoints:
         club = server.clubs[0]
         # choose a competition that takes place in the future
         competition = server.competitions[0]
-        ####### END OF THE SETUP ########
+        # END OF THE SETUP ########
         # Step 1
         resp = client.post('/showSummary', data={'email': club['email']})
         expected_value = 'Welcome, ' + club['email']

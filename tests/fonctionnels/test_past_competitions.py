@@ -1,6 +1,5 @@
 from selenium.webdriver import Chrome
 import pytest
-from P11_Flask_Testing_Debugging import server
 import time
 import json
 
@@ -17,7 +16,7 @@ class TestWithSelenium:
     Step 5: SAD PATH = from the home page choose a competition in the past to book places
     Step 6: Check that the page displays an error message"""
 
-    ##### SETUP OF THE TESTS #####
+    # SETUP OF THE TESTS #####
     future_competition = {"name": "Test_competition_in_future",
                           "date": "2022-03-27 10:00:00",
                           "numberOfPlaces": "200"}
@@ -46,7 +45,7 @@ class TestWithSelenium:
             clubs.append(c)
         clubs = {'clubs': clubs}
         with open('clubs.json', 'w') as comps:
-                json.dump(clubs, comps)
+            json.dump(clubs, comps)
 
     def __teardown_competitions_json_file(self):
         compets = self.load_competitions()
@@ -69,7 +68,7 @@ class TestWithSelenium:
         self.__teardown_competitions_json_file()
         self.__tear_down_club()
 
-    ##### END OF SETUP #####
+    # END OF SETUP #####
     # Step 1
     def __open_site_with_chrome(self):
         self.browser = Chrome("chromedriver")
@@ -131,4 +130,3 @@ class TestWithSelenium:
     def test_happy_path(self):
         self.__login()
         self.__happy_path()
-

@@ -1,12 +1,10 @@
 import pytest
 from P11_Flask_Testing_Debugging import server
-import json
-
 
 
 @pytest.mark.all_tests
 @pytest.mark.max_12_places
-class Test_max_12_places:
+class TestMax12Places:
     """ This test check that no club can book more than 12 places for one competition
      Otherwise an error message is returned"""
 
@@ -29,8 +27,8 @@ class Test_max_12_places:
     def test_book_max_12_places(self, client, data, expected_flash_message, mocker):
         mocker.patch.object(server, 'clubs', self.club)
         mocker.patch.object(server, 'competitions', self.competition)
-        data = {'competition': server.competitions[-1]['name'], 'club': server.clubs[-1]['name'], 'places': data['places']}
+        data = {'competition': server.competitions[-1]['name'], 'club': server.clubs[-1]['name'],
+                'places': data['places']}
         resp = client.post('/purchasePlaces', data=data)
         # assert resp.status_code == 200
         assert expected_flash_message in resp.data.decode()
-

@@ -17,7 +17,7 @@ class TestWithSelenium:
     Step 6: SAD PATH = once clicked on the booking link book more than 12 places
     Step 7: Check that the page displays an error message"""
 
-    ##### SETUP THE TESTS #####
+    # SETUP THE TESTS #####
     futur_competition = {"name": "Futur_competition", "date": "2022-03-27 10:00:00", "numberOfPlaces": "200"}
     club = [{"name": "Test_club", "email": "test_club@test.com", "points": "200"}]
 
@@ -74,7 +74,7 @@ class TestWithSelenium:
         self.__tear_down_competitions()
         self.__tear_down_club()
 
-    ##### END OF THE SETUP #####
+    # END OF THE SETUP #####
 
     # Step 1
     def __open_site_with_chrome(self):

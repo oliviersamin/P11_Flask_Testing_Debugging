@@ -5,16 +5,16 @@ import json
 
 @pytest.mark.all_tests
 @pytest.mark.points_updated
-class Test_points_updated:
+class TestPointsUpdated:
     """ This test needs several steps as this is the first one implemented after the login error.
      In order to validate that the points have been updated properly one first need to be sure that:
      Step 1: The club balance points is a positive integer
      Step 2: The competition number of places is a positive integer
      Step 3: The number of places booked is a positive integer
      Step 4: At last that the club balance points has been properly updated
-     For each of these step an error message needs to be dsplayed if needed"""
+     For each of these step an error message needs to be displayed if needed"""
 
-    ####### SETUP OF THE TEST  ###########
+    # SETUP OF THE TEST  ###########
     club = [{"name": "Simply Lift", "email": "john@simplylift.co", "points": "-13"},
             {"name": "Simply Lift", "email": "john@simplylift.co", "points": "AA/13"},
             {"name": "Simply Lift", "email": "john@simplylift.co", "points": "3.1"}]
@@ -25,13 +25,13 @@ class Test_points_updated:
                    {"name": "Spring Festival", "date": "2022-03-27 10:00:00", "numberOfPlaces": "200"}]
 
     def load_clubs(self):
-        """ load the data from 'clubs.json' and override the clubs varable from server.py """
+        """ load the data from 'clubs.json' and override the clubs variable from server.py """
         with open('clubs.json') as c:
             clubs = json.load(c)['clubs']
             return clubs
 
     def load_competitions(self):
-        """ load the data from 'clubs.json' and override the competitions varable from server.py """
+        """ load the data from 'clubs.json' and override the competitions variable from server.py """
         with open('competitions.json') as comps:
             competitions = json.load(comps)['competitions']
             return competitions
@@ -42,8 +42,7 @@ class Test_points_updated:
             clubs.append(c)
         clubs = {'clubs': clubs}
         with open('clubs.json', 'w') as comps:
-                json.dump(clubs, comps)
-        clubs = self.load_clubs()
+            json.dump(clubs, comps)
 
     def __setup_competition(self):
         compets = self.load_competitions()
@@ -51,8 +50,7 @@ class Test_points_updated:
             compets.append(c)
         compets = {'competitions': compets}
         with open('competitions.json', 'w') as comps:
-                json.dump(compets, comps)
-        compets = self.load_competitions()
+            json.dump(compets, comps)
 
     def __tear_down_club(self):
         clubs = self.load_clubs()
@@ -76,7 +74,7 @@ class Test_points_updated:
         self.__tear_down_club()
         self.__tear_down_competitions()
 
-    ####### END OF SETUP ###########
+    # END OF SETUP ###########
 
     # Step 1
     def test_club_points_is_not_positive_integer(self, client):
@@ -85,7 +83,7 @@ class Test_points_updated:
             resp = client.post('/showSummary', data=club)
             print('club = ', club, flush=True)
             print(resp.data.decode(), flush=True)
-            expected_message = "ERROR: The number of points for the club is not a positive integer"
+            expected_flash_message = "ERROR: The number of points for the club is not a positive integer"
             assert expected_flash_message in resp.data.decode()
 
     # Step 2

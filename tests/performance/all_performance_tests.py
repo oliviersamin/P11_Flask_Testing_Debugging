@@ -3,13 +3,12 @@ import server
 import json
 
 
-
 class TestPerformance(HttpUser):
-    """ This test check the pergormance to reach each page of the website.
+    """ This test check the performance to reach each page of the website.
      Therefore each method correspond to one page of the website"""
 
     futur_competition = {"name": "Test_competition_in_future", "date": "2022-03-27 10:00:00",
-                     "numberOfPlaces": "200"}
+                         "numberOfPlaces": "200"}
 
     def __load_competitions(self):
         with open('competitions.json') as comps:
@@ -52,7 +51,6 @@ class TestPerformance(HttpUser):
     def access_book(self):
         competitions = self.__load_competitions()
         url = 'http://127.0.0.1:5000/book/' + competitions[-1]['name'] + '/' + server.clubs[0]['name']
-        print("/n###### ACCES BOOK #########/n", url, flush=True)
         self.client.get(url)
 
     @task(6)
