@@ -1,6 +1,5 @@
 import json
 from flask import Flask, render_template, request, redirect, flash, url_for
-import sys
 import time as t
 
 
@@ -19,21 +18,21 @@ def is_a_positive_integer(string_to_check: str) -> bool:
         param: input type = string
         param: output type = boolean
     """
-    filter = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+    filter_positive_integer = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
     check = ""
     for character in string_to_check:
-        if character not in filter:
+        if character not in filter_positive_integer:
             check = character
             break
     return check == ""
 
 
 def check_competitions_number_of_places_is_positive_integer():
-    filter = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
-    for index, compet in enumerate(competitions):
+    filter_positive_integer = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+    for ind, compet in enumerate(competitions):
         for char in compet['numberOfPlaces']:
-            if char not in filter:
-                competitions[index]['numberOfPlaces'] = "ERROR: The number of places is not a positive integer"
+            if char not in filter_positive_integer:
+                competitions[ind]['numberOfPlaces'] = "ERROR: The number of places is not a positive integer"
                 break
 
 
@@ -120,8 +119,8 @@ def purchasePlaces():
 
 @app.route('/listOfClubPoints', methods=['GET'])
 def list_of_club_points():
-    clubs = loadClubs()
-    return render_template('list_of_club_points.html', clubs=clubs)
+    club_list = loadClubs()
+    return render_template('list_of_club_points.html', clubs=club_list)
 
 
 @app.route('/logout')
